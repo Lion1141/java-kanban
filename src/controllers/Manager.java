@@ -17,7 +17,7 @@ public class Manager {
         task.setId(counterId++);
         task.setName(name);
         task.setDescription(description);
-        task.setStatus(Task.NEW_STATUS);
+        task.setStatus(Task.STATUS_NEW);
 
         tasks.put(task.getId(), task);
 
@@ -29,7 +29,7 @@ public class Manager {
         epic.setId(counterId++);
         epic.setName(name);
         epic.setDescription(description);
-        epic.setStatus(Task.NEW_STATUS);
+        epic.setStatus(Task.STATUS_NEW);
 
         epics.put(epic.getId(), epic);
 
@@ -45,32 +45,11 @@ public class Manager {
         subtask.setId(counterId++);
         subtask.setName(name);
         subtask.setDescription(description);
-        subtask.setStatus(Task.NEW_STATUS);
+        subtask.setStatus(Task.STATUS_NEW);
 
         subtasks.put(subtask.getId(), subtask);
 
         return subtask;
-    }
-
-    public void changeSubtaskStatus(int idEpic, int idSubtask, String newStatus) { //изменение статуса сабтаска
-        Epic epic = epics.get(idEpic);
-        HashMap<Integer, Subtask> subtasks = epic.getSubtasks();
-        Subtask subtask = subtasks.get(idSubtask);
-        subtask.setStatus(newStatus);
-
-        switch (newStatus) { //проверка статуса сабтаски и присвоение статуса эпику в зависимости от результата проверки
-            case Task.IN_PROGRESS_STATUS:
-                if (!epic.getStatus().equals(Task.IN_PROGRESS_STATUS)) {
-                    epic.setStatus(Task.IN_PROGRESS_STATUS);
-                }
-                break;
-            case Task.DONE_STATUS:
-                if (epic.checkStatusSubtasks(Task.DONE_STATUS)) {
-                    epic.setStatus(Task.DONE_STATUS);
-                } else {
-                    epic.setStatus(Task.IN_PROGRESS_STATUS);
-                }
-        }
     }
 
     //Для удобства работы в будущем и упрощения чтения я решил реализовать интерфейс коллекций
@@ -124,6 +103,27 @@ public class Manager {
     public void removeIdEpicSubtask(int idEpic, int idSubtask) { //удаление сабтаска по ID
         Epic epic = epics.get(idEpic);
         epic.removeIdSubtask(idSubtask);
+    }
+
+    public void changeSubtaskStatus(int idEpic, int idSubtask, String newStatus) { //изменение статуса сабтаска
+        Epic epic = epics.get(idEpic);
+        HashMap<Integer, Subtask> subtasks = epic.getSubtasks();
+        Subtask subtask = subtasks.get(idSubtask);
+        subtask.setStatus(newStatus);
+
+        switch (newStatus) { //проверка статуса сабтаски и присвоение статуса эпику в зависимости от результата проверки
+            case Task.STATUS_IN_PROGRESS:
+                if (!epic.getStatus().equals(Task.STATUS_IN_PROGRESS)) {
+                    epic.setStatus(Task.STATUS_IN_PROGRESS);
+                }
+                break;
+            case Task.STATUS_DONE:
+                if (epic.checkStatusSubtasks(Task.STATUS_DONE)) {
+                    epic.setStatus(Task.STATUS_DONE);
+                } else {
+                    epic.setStatus(Task.STATUS_IN_PROGRESS);
+                }
+        }
     }
 
     public void updateTask(Task task) { //обновление задачи

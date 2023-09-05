@@ -2,9 +2,9 @@ package model;
 
 public class Task {
 
-    public static final String NEW_STATUS = "NEW";
-    public static final String IN_PROGRESS_STATUS = "IN_PROGRESS";
-    public static final String DONE_STATUS = "DONE";
+    public static final String STATUS_NEW = "NEW";
+    public static final String STATUS_IN_PROGRESS = "IN_PROGRESS";
+    public static final String STATUS_DONE = "DONE";
 
     private String name;
     private String description;

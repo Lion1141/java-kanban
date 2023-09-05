@@ -3,8 +3,8 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 
-import static model.Task.DONE_STATUS;
-import static model.Task.IN_PROGRESS_STATUS;
+import static model.Task.STATUS_DONE;
+import static model.Task.STATUS_IN_PROGRESS;
 
 
 public class Main {
@@ -33,11 +33,11 @@ public class Main {
         System.out.println("**************Обновляем задачи**************");
         task1.setName("Задача ver.2");
         task2.setDescription("Описание задачи ver.2");
-        task1.setStatus(IN_PROGRESS_STATUS); //выбираем статус, который хотим присвоить в обновлении
+        task1.setStatus(STATUS_IN_PROGRESS); //выбираем статус, который хотим присвоить в обновлении
         manager.updateTask(task1); //обновляем задачу
         System.out.println(task1.toString()); //выводим обновлённую задачу
 
-        task2.setStatus(DONE_STATUS);
+        task2.setStatus(STATUS_DONE);
         manager.updateTask(task2);
         System.out.println(task2.toString());
         System.out.println();
@@ -45,11 +45,11 @@ public class Main {
         epic1.setName("Новый эпик 1");
         epic1.setDescription("Новое описание эпика 1");
         manager.updateEpic(epic1);
-        manager.changeSubtaskStatus(epic1.getId(), subtask.getId(), IN_PROGRESS_STATUS); //меняем статус сабтаска
+        manager.changeSubtaskStatus(epic1.getId(), subtask.getId(), STATUS_IN_PROGRESS); //меняем статус сабтаска
         System.out.println(epic1.toString()); //вывод эпика с новым статусом
 
-        manager.changeSubtaskStatus(epic2.getId(), subtask1.getId(), DONE_STATUS); //меняем статус сабтаска
-        manager.changeSubtaskStatus(epic2.getId(), subtask2.getId(), IN_PROGRESS_STATUS); //меняем статус сабтаска
+        manager.changeSubtaskStatus(epic2.getId(), subtask1.getId(), STATUS_DONE); //меняем статус сабтаска
+        manager.changeSubtaskStatus(epic2.getId(), subtask2.getId(), STATUS_IN_PROGRESS); //меняем статус сабтаска
         System.out.println(epic2.toString()); //вывод эпика со старым статусом
         System.out.println();
 
