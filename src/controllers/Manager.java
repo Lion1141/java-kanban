@@ -139,7 +139,6 @@ public class Manager {
                 } else if (value.getStatus().equalsIgnoreCase("NEW")) {
                     countNew++;
                 }
-
             }
         }
         // Смена статуса у родительского эпика в зависимости от статусов его сабтасков

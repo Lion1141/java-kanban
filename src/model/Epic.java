@@ -1,10 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-
-import java.util.ArrayList;
 
 public class Epic extends Task{
     private ArrayList<Integer> idSubtask;

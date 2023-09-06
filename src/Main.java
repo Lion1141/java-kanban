@@ -23,15 +23,15 @@ public class Main {
 
 
         System.out.println("**************Список задач**************"); //выводим на консоль
-        System.out.println(task1.toString());
-        System.out.println(task2.toString());
+        System.out.println(task1);
+        System.out.println(task2);
         System.out.println();
         System.out.println("**************Список эпиков с подзадачами**************");
-        System.out.println(epic1.toString());
-        System.out.println(subtask11.toString());
-        System.out.println(epic2.toString());
-        System.out.println(subtask21.toString());
-        System.out.println(subtask22.toString());
+        System.out.println(epic1);
+        System.out.println(subtask11);
+        System.out.println(epic2);
+        System.out.println(subtask21);
+        System.out.println(subtask22);
         System.out.println();
 
         System.out.println("**************Обновляем задачи**************");
@@ -39,11 +39,11 @@ public class Main {
         task2.setDescription("Описание задачи ver.2");
         task1.setStatus("IN_PROGRESS"); //выбираем статус, который хотим присвоить в обновлении
         manager.updateTask(task1); //обновляем задачу
-        System.out.println(task1.toString()); //выводим обновлённую задачу
+        System.out.println(task1); //выводим обновлённую задачу
 
         task2.setStatus("DONE");
         manager.updateTask(task2);
-        System.out.println(task2.toString());
+        System.out.println(task2);
         System.out.println();
 
         System.out.println("**************Обновляем эпики**************");
@@ -54,13 +54,13 @@ public class Main {
         subtask11.setDescription("Новое описание сабтаска 1.1");
         subtask11.setStatus("DONE");
         manager.updateSubtask(subtask11); //меняем статус сабтаска
-        System.out.println(epic1.toString()); //вывод эпика с новым статусом
+        System.out.println(epic1); //вывод эпика с новым статусом
 
         manager.updateSubtask(subtask21);; //меняем статус сабтаска
-        System.out.println(epic2.toString()); //вывод эпика со старым статусом
+        System.out.println(epic2); //вывод эпика со старым статусом
         System.out.println();
 
-        System.out.println("**************Удалим задачу, сабтаски эпика 1 и эпик 2**************");
+        System.out.println("**************Удалим задачу, эпик 1 и сабтаск эпика 2**************");
 
         manager.deleteById(epic1.getId());
         manager.deleteById(task2.getId());
