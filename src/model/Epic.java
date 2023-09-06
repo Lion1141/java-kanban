@@ -1,52 +1,40 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class Epic extends Task {
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+import java.util.ArrayList;
 
-    public HashMap<Integer, Subtask> getSubtasks() { //сохранение сабтаска в хэшмап
-        return subtasks;
+public class Epic extends Task{
+    private ArrayList<Integer> idSubtask;
+
+    public Epic(String name, String description) {
+        super(name, description);
+        idSubtask = new ArrayList<>();
+
+    }
+    public Epic(String name, String description, int id) {
+        super(name, description, id);
+        idSubtask = new ArrayList<>();
     }
 
-    public boolean checkStatusSubtasks(String status) { //проверка статуса сабтаска
-        for (Subtask subtask : subtasks.values()) {
-            if (!subtask.getStatus().equals(status)) {
-                return false;
-            }
-        }
-        return true;
+    public ArrayList<Integer> getIdSubtask() {
+        return idSubtask;
     }
 
-    public Collection<Subtask> getValuesSubtasks() { //получаем значение сабтаска
-        return subtasks.values();
-    }
-
-    public Subtask getIdSubtaskById(int idSubtask) { //получение id сабтаска
-        return subtasks.get(idSubtask);
-    }
-
-    public void removeAllSubtasks() { //удаляем все сабтаски
-        subtasks.clear();
-    }
-
-    public void removeIdSubtask(int idSubtask) { //удаляем сабтаски по ID
-        subtasks.remove(idSubtask);
-    }
-
-    public void updateSubtask(Subtask subtask) { //обновляем сабтаск
-        subtasks.put(subtask.getId(), subtask);
+    public void setIdSubtask(ArrayList<Integer> idSubtask) {
+        this.idSubtask = idSubtask;
     }
 
     @Override
     public String toString() {
         return "Epic{" +
-                "name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", id=" + getId() +
-                ", status='" + getStatus() + '\'' +
-                ", subtasks=" + subtasks +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", subtasks=" + idSubtask +
                 '}';
     }
 }

@@ -1,15 +1,34 @@
 package model;
 
 public class Task {
+    protected String name;
+    protected int id;
+    protected String description;
+    protected String status;
 
-    public static final String STATUS_NEW = "NEW";
-    public static final String STATUS_IN_PROGRESS = "IN_PROGRESS";
-    public static final String STATUS_DONE = "DONE";
+    public Task(String name, String description) { //конструктор для создания объекта с новым id
+        this.name = name;
+        this.description = description;
+        this.status = "NEW";
+    }
 
-    private String name;
-    private String description;
-    private int id;
-    private String status;
+    public Task(String name, String description, int id) { //конструктор для обновления объекта без обновления статуса
+        this.name = name;
+        this.id = id;
+        this.description = description;
+    }
+
+    public Task(String name, String description, int id, String status) { //конструктор для обновления объекта по ID
+        this.name = name;
+        this.id = id;
+        this.description = description;
+        this.status = status;
+    }
+
+    public int getId() {
+
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -19,20 +38,16 @@ public class Task {
         this.name = name;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getStatus() {
@@ -47,8 +62,8 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "name='" + name + '\'' +
-                ", description='" + description + '\'' +
                 ", id=" + id +
+                ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }
