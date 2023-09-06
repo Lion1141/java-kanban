@@ -4,13 +4,14 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class Manager {
-    public HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    public HashMap<Integer, Task> tasks = new HashMap<>();
-    public HashMap<Integer, Epic> epics = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
     private int counterId;
 
     public Integer createTask(Task task) { //создание задачи;
@@ -42,7 +43,7 @@ public class Manager {
         epic.getIdSubtask().add(idSubtask); // добавляем id сабтаска в ArrayList Epic'а
     }
 
-    public void removeIdSubtaskFromEpics(int idSubtask, int idEpic) {
+    public void removeIdSubtaskFromEpics(int idSubtask, int idEpic) { //удаление id сабтасков из списка эпика
         Epic epic = epics.get(idEpic); // получаем объект Epic с указанным id
         int position = 0;
         for (Integer valueId : epic.getIdSubtask()) {
@@ -66,13 +67,19 @@ public class Manager {
         return subtasks.values();
     }
 
-
     public void removeAllTasks() { //удаление всех задач
         tasks.clear();
     }
 
     public void removeAllEpics() { //удаление всех эпиков
         epics.clear();
+        subtasks.clear();
+    }
+
+    public void removeAllSubtasks(Epic epic) { //удаление всех сабтасков
+        subtasks.clear();
+        epic.removeIdSubtasks();
+        checkStatusOfSubtask(epic.getId());
     }
     public Task getIdTask(int idTask) { //получение задачи по ID
         return tasks.get(idTask);
@@ -82,16 +89,10 @@ public class Manager {
         return epics.get(idEpic);
     }
 
-    public void getSubtaskByIdEpic(int idEpic, int idSubtask) { //получение сабтаска по ID
-        for (Integer key : subtasks.keySet()) {
-            if (key == idSubtask) {
-                subtasks.get(key);
-                return;
-            }
-        }
+    public Subtask getSubtaskById(int idSubtask) { //получение сабтаска по ID
+        return subtasks.get(idSubtask);
     }
 
-    // 2.5
     public void updateTask(Task task) { // Обновление Task
             tasks.put(task.getId(), task);
     }
@@ -106,25 +107,35 @@ public class Manager {
     }
 
     public void updateEpic(Epic epic) { // Обновление Epic
-            Epic oldEpic = epics.get(epic.getId());
-            epic.setIdSubtask(oldEpic.getIdSubtask()); // сохраняем старый список сабтасков у эпика
-            epics.put(epic.getId(), epic);
-            checkStatusOfSubtask(epic.getId()); // обновляем статус у  эпика
+        final Epic savedEpic = epics.get(epic.getId());
+        savedEpic.setName(epic.getName());
+        savedEpic.setDescription(epic.getDescription());
+            checkStatusOfSubtask(epic.getId()); // обновляем статус у эпика
         }
 
-       public void deleteById(int id) { //2.6 Удаление по ID
-        if (tasks.containsKey(id)) {
-            tasks.remove(id);
-        } else if (epics.containsKey(id)) {
+    public void deleteTaskByID(int id) { //удаление задачи по id
+        tasks.remove(id);
+    }
+
+    public void deleteEpicByID(int id) { //удаление эпика по id
+    if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
-            for (int i = 0; i < epic.getIdSubtask().size(); i++) { //удаление всех сабтасков эпика
-                deleteById(epic.getIdSubtask().get(i));
+            for (int i = 0; i < epic.getIdSubtask().size(); i++) {
+                deleteEpicByID(epic.getIdSubtask().get(i)); //рекурсия для удаления сабтасков выбранного эпика
             }
             epics.remove(id); //удаляем эпик
         } else {
             subtasks.remove(id);
         }
     }
+
+    public void deleteSubtaskByID(int id) { //удаление сабтасков по id
+        Subtask subtask = subtasks.get(id);
+        int idEpic = subtask.getIdEpic();
+        subtasks.remove(id);
+        checkStatusOfSubtask(idEpic); // обновляем статус у эпика
+    }
+
 
     private void checkStatusOfSubtask(int idEpic) { // проверяем статусы всех сабтасков при обновлении каждого из них и меняем у эпика
         int countNew = 0;

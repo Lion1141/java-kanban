@@ -56,16 +56,22 @@ public class Main {
         manager.updateSubtask(subtask11); //меняем статус сабтаска
         System.out.println(epic1); //вывод эпика с новым статусом
 
-        manager.updateSubtask(subtask21);; //меняем статус сабтаска
+        manager.updateSubtask(subtask21); //меняем статус сабтаска
         System.out.println(epic2); //вывод эпика со старым статусом
         System.out.println();
 
         System.out.println("**************Удалим задачу, эпик 1 и сабтаск эпика 2**************");
 
-        manager.deleteById(epic1.getId());
-        manager.deleteById(task2.getId());
-        manager.removeIdSubtaskFromEpics(subtask21.getId(), epic2.getId());
+        manager.deleteEpicByID(epic1.getId());
+        manager.deleteTaskByID(task2.getId());
+        manager.deleteSubtaskByID(subtask22.getId());
+//        manager.removeIdSubtaskFromEpics(subtask21.getId(), epic2.getId());
+        System.out.println(manager.getSubtasks());
         System.out.println(manager.getEpics());
         System.out.println(manager.getTasks());
+        System.out.println(manager.getSubtasks());
+//        manager.removeAllSubtasks(epic2);
+        System.out.println(manager.getEpics());
+
     }
 }
