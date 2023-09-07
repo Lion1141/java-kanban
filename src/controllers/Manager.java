@@ -76,10 +76,15 @@ public class Manager {
         subtasks.clear();
     }
 
-    public void removeAllSubtasks(Epic epic) { //удаление всех сабтасков
+    public void removeAllSubtasks() { //удаление всех сабтасков
         subtasks.clear();
-        epic.removeIdSubtasks();
-        checkStatusOfSubtask(epic.getId());
+        for (Integer idEpic : epics.keySet()) {
+            Epic epic = epics.get(idEpic);
+            epic.removeIdSubtasks();
+        }
+        for (Integer idEpic : epics.keySet()) {
+            checkStatusOfSubtask(idEpic);
+        }
     }
     public Task getIdTask(int idTask) { //получение задачи по ID
         return tasks.get(idTask);
@@ -118,16 +123,11 @@ public class Manager {
     }
 
     public void deleteEpicByID(int id) { //удаление эпика по id
-    if (epics.containsKey(id)) {
-            Epic epic = epics.get(id);
-            for (int i = 0; i < epic.getIdSubtask().size(); i++) {
-                deleteEpicByID(epic.getIdSubtask().get(i)); //рекурсия для удаления сабтасков выбранного эпика
+            final Epic epic = epics.remove(id); //удаляем эпик из общего списка
+            for (Integer subtaskId : epic.getIdSubtask()) { //удаляем все подзадачи этого эпика из общего списка в цикле
+                subtasks.remove(subtaskId);
             }
-            epics.remove(id); //удаляем эпик
-        } else {
-            subtasks.remove(id);
         }
-    }
 
     public void deleteSubtaskByID(int id) { //удаление сабтасков по id
         Subtask subtask = subtasks.get(id);
