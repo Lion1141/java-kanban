@@ -4,12 +4,12 @@ public class Task {
     protected String name;
     protected int id;
     protected String description;
-    protected String status;
+    protected TaskStatus status;
 
     public Task(String name, String description) { //конструктор для создания объекта с новым id
         this.name = name;
         this.description = description;
-        this.status = "NEW";
+        this.status = status;
     }
 
     public Task(String name, String description, int id) { //конструктор для обновления объекта без обновления статуса
@@ -18,7 +18,7 @@ public class Task {
         this.description = description;
     }
 
-    public Task(String name, String description, int id, String status) { //конструктор для обновления объекта по ID
+    public Task(String name, String description, int id, TaskStatus status) { //конструктор для обновления объекта по ID
         this.name = name;
         this.id = id;
         this.description = description;
@@ -50,12 +50,8 @@ public class Task {
         this.description = description;
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     @Override
@@ -66,5 +62,9 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 '}';
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 }

@@ -16,7 +16,7 @@ public class Epic extends Task{
     }
 
     public ArrayList<Integer> getIdSubtask() {
-        return idSubtask;
+            return idSubtask;
     }
 
     public void setIdSubtask(ArrayList<Integer> idSubtask) {
