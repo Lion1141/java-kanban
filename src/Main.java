@@ -10,6 +10,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         Manager manager = Managers.getDefault();
+
         Task task1 = new Task("Задача 1", "Описание задачи 1"); //создаём задачи
         Integer taskId1 = manager.createTask(task1);
         Task task2 = new Task("Задача 2", "Описание задачи 2");

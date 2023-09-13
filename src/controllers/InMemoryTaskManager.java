@@ -17,7 +17,6 @@ public class InMemoryTaskManager implements Manager {
 
     private final HistoryManager historyManager = new InMemoryHistoryManager();
 
-
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
@@ -26,47 +25,47 @@ public class InMemoryTaskManager implements Manager {
     @Override
     public Integer createTask(Task task) { //создание задачи;
         task.setId(counterId++);
+        int taskId = task.getId();
         task.setStatus(TaskStatus.NEW);
-        tasks.put(task.getId(), task);
-        return task.getId();
+        tasks.put(taskId, task);
+        return taskId;
     }
 
     @Override
     public Integer createEpic(Epic epic) { //создание эпика
         epic.setId(counterId++);
+        int epicId = epic.getId();
         epic.setStatus(TaskStatus.NEW);
         epics.put(epic.getId(), epic);
-        return epic.getId();
+        return epicId;
     }
 
     @Override
     public Integer createSubtask(Subtask subtask) {
         subtask.setId(counterId++);
+        int subtaskEpicId = subtask.getIdEpic();
+        int subtaskId = subtask.getId();
         subtask.setStatus(TaskStatus.NEW);
-        subtasks.put(subtask.getId(), subtask);
-        addIdSubtaskToEpics(subtask.getId(), subtask.getIdEpic());
-        subtasks.put(subtask.getId(),subtask);
-        checkStatusOfSubtask(subtask.getIdEpic());
-        return subtask.getId();
+        addIdSubtaskToEpics(subtaskId, subtaskEpicId);
+        subtasks.put(subtaskId,subtask);
+        checkStatusOfSubtask(subtaskEpicId);
+        return subtaskId;
     }
 
     @Override
     public void addIdSubtaskToEpics(int idSubtask, int idEpic) { // добавление id сабтаска в список сабтасков эпика
         Epic epic = epics.get(idEpic); // получаем объект Epic с указанным id
-        epic.getIdSubtask().add(idSubtask); // добавляем id сабтаска в ArrayList Epic'а
+        var idSubtasks = epic.getIdSubtask();
+        if(idSubtasks.contains(idSubtask)) { //проверка на наличие такого id
+            return;
+        }
+        idSubtasks.add(idSubtask); // добавляем id сабтаска в ArrayList Epic'а
     }
 
     @Override
     public void removeIdSubtaskFromEpics(int idSubtask, int idEpic) { //удаление id сабтасков из списка эпика
         Epic epic = epics.get(idEpic); // получаем объект Epic с указанным id
-        int position = 0;
-        for (Integer valueId : epic.getIdSubtask()) {
-            if (valueId == idSubtask) {
-                break;
-            }
-            position++;
-        }
-        epic.getIdSubtask().remove(position);
+         epic.getIdSubtask().remove((Object)idSubtask); //удалён цикл и условие для лучшей читаемости
     }
 
     @Override
@@ -131,20 +130,29 @@ public class InMemoryTaskManager implements Manager {
 
     @Override
     public void updateSubtask(Subtask subtask) { // Обновление Subtask
-        Subtask oldSubtask = subtasks.get(subtask.getId());
-        subtasks.put(subtask.getId(), subtask);
-        addIdSubtaskToEpics(subtask.getId(), subtask.getIdEpic()); // добавляем сабтакс в список нового эпика
-        removeIdSubtaskFromEpics(subtask.getId(), oldSubtask.getIdEpic()); // удаляем сабтакс из списка старого эпика
-        checkStatusOfSubtask(subtask.getIdEpic()); // обновляем статус у нового эпика
-        checkStatusOfSubtask(oldSubtask.getIdEpic()); // обновляем статус у старого эпика
+        int subtaskEpicId = subtask.getIdEpic();
+        int subtaskId = subtask.getId();
+        Subtask oldSubtask = subtasks.get(subtaskId);
+        int oldSubtaskIdEpic = oldSubtask.getIdEpic();
+        subtasks.put(subtaskId, subtask);
+        if (subtaskId != oldSubtaskIdEpic) {
+            /*исправлен баг из за которого дублировался id сабтаска
+            путём проверки на изменение id Эпика
+             */
+            addIdSubtaskToEpics(subtaskId, subtaskEpicId); // добавляем сабтаск в список нового эпика
+            removeIdSubtaskFromEpics(subtaskId, oldSubtaskIdEpic); // удаляем сабтаск из списка старого эпика
+        }
+        checkStatusOfSubtask(subtaskEpicId); // обновляем статус у нового эпика
+        checkStatusOfSubtask(oldSubtaskIdEpic); // обновляем статус у старого эпика
     }
 
     @Override
     public void updateEpic(Epic epic) { // Обновление Epic
-        final Epic savedEpic = epics.get(epic.getId());
+        int epicId = epic.getId();
+        final Epic savedEpic = epics.get(epicId);
         savedEpic.setName(epic.getName());
         savedEpic.setDescription(epic.getDescription());
-        checkStatusOfSubtask(epic.getId()); // обновляем статус у эпика
+        checkStatusOfSubtask(epicId); // обновляем статус у эпика
     }
 
     @Override
@@ -180,6 +188,7 @@ public class InMemoryTaskManager implements Manager {
                 countSubtasksOfEpic++; // считаем количество сабтасков у определенного эпика
                 if (value.getStatus().equals("DONE")) {
                     countDone++;
+                    break;
                 } else if (value.getStatus().equals("NEW")) {
                     countNew++;
                 }

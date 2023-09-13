@@ -2,7 +2,6 @@ package controllers;
 
 import model.Task;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,14 +15,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task != null) {
             if (history.size() > MAX_SIZE_HISTORY) {
                 history.removeFirst();
-                history.add(task);
-            } else {
-                history.add(task);
             }
+            history.add(task);
         }
     }
     @Override
     public List<Task> getHistory() {
-        return history;
+        return List.copyOf(history);
     }
 }
