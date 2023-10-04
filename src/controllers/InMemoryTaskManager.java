@@ -84,35 +84,41 @@ public class InMemoryTaskManager implements Manager {
 
     @Override
     public void removeAllTasks() { //удаление всех задач
+        tasks.values().forEach(task -> historyManager.remove(task.getId()));
         tasks.clear();
     }
 
     @Override
     public void removeAllEpics() { //удаление всех эпиков
+        epics.values().forEach(epic -> historyManager.remove(epic.getId()));
         epics.clear();
+
+        subtasks.values().forEach(subtask -> historyManager.remove(subtask.getId()));
         subtasks.clear();
     }
 
     @Override
     public void removeAllSubtasks() { //удаление всех сабтасков
+        subtasks.values().forEach(subtask -> historyManager.remove(subtask.getId()));
         subtasks.clear();
-        for (Integer idEpic : epics.keySet()) {
-            Epic epic = epics.get(idEpic);
+
+        epics.values().forEach(epic -> {
             epic.removeIdSubtasks();
-        }
+        });
+
         for (Integer idEpic : epics.keySet()) {
             checkStatusOfSubtask(idEpic);
         }
     }
 
     @Override
-    public Task getIdTask(int idTask) { //получение задачи по ID
+    public Task getTaskById(int idTask) { //получение задачи по ID
         historyManager.addTask(tasks.get(idTask));
         return tasks.get(idTask);
     }
 
     @Override
-    public Epic getIdEpic(int idEpic) { //получение эпика по ID
+    public Epic getEpicById(int idEpic) { //получение эпика по ID
         historyManager.addTask(epics.get(idEpic));
         return epics.get(idEpic);
     }
@@ -157,13 +163,16 @@ public class InMemoryTaskManager implements Manager {
 
     @Override
     public void deleteTaskByID(int id) { //удаление задачи по id
+        historyManager.remove(id);
         tasks.remove(id);
     }
 
     @Override
     public void deleteEpicByID(int id) { //удаление эпика по id
         final Epic epic = epics.remove(id); //удаляем эпик из общего списка
+        historyManager.remove(id);
         for (Integer subtaskId : epic.getIdSubtask()) { //удаляем все подзадачи этого эпика из общего списка в цикле
+            historyManager.remove(subtaskId);
             subtasks.remove(subtaskId);
         }
     }
@@ -172,6 +181,7 @@ public class InMemoryTaskManager implements Manager {
     public void deleteSubtaskByID(int id) { //удаление сабтасков по id
         Subtask subtask = subtasks.get(id);
         int idEpic = subtask.getIdEpic();
+        historyManager.remove(id);
         subtasks.remove(id);
         checkStatusOfSubtask(idEpic); // обновляем статус у эпика
     }

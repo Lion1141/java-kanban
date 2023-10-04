@@ -34,8 +34,8 @@ public interface Manager {
     void removeAllEpics();
 
     void removeAllSubtasks();
-    Task getIdTask(int idTask);
-    Epic getIdEpic(int idEpic);
+    Task getTaskById(int idTask);
+    Epic getEpicById(int idEpic);
 
     Subtask getSubtaskById(int idSubtask);
 
