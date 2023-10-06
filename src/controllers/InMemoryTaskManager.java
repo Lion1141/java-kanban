@@ -4,6 +4,7 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
+import util.Managers;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class InMemoryTaskManager implements Manager {
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private int counterId;
 
-    private final HistoryManager historyManager = new InMemoryHistoryManager();
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public List<Task> getHistory() {

@@ -50,6 +50,5 @@ public interface Manager {
 
     void deleteSubtaskByID(int id);
 
-
     void checkStatusOfSubtask(int idEpic);
 }
