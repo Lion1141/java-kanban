@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import static model.TaskType.EPIC;
 
 public class Epic extends Task{
     private ArrayList<Integer> idSubtask;
@@ -8,19 +9,17 @@ public class Epic extends Task{
     public Epic(String name, String description) {
         super(name, description);
         idSubtask = new ArrayList<>();
+        super.setTaskType(EPIC);
 
     }
     public Epic(String name, String description, int id) {
         super(name, description, id);
         idSubtask = new ArrayList<>();
+        super.setTaskType(EPIC);
     }
 
     public ArrayList<Integer> getIdSubtask() {
             return idSubtask;
-    }
-
-    public void setIdSubtask(ArrayList<Integer> idSubtask) {
-        this.idSubtask = idSubtask;
     }
 
     public void removeIdSubtasks() {

@@ -1,4 +1,5 @@
 package model;
+import static model.TaskType.SUBTASK;
 
 
 public class Subtask extends Task {
@@ -6,7 +7,14 @@ public class Subtask extends Task {
 
     public Subtask(String name, String description, int idEpic) { // конструктор при создании объекта (id генерируется первый свободный)
         super(name, description);
+        super.setTaskType(SUBTASK);
         this.idEpic = idEpic;
+    }
+
+    public Subtask(String name, String description, int id, TaskStatus status, int idEpic) {
+        super(name, description, id, status);
+        this.idEpic = idEpic;
+        super.setTaskType(SUBTASK);
     }
 
     public int getIdEpic() {

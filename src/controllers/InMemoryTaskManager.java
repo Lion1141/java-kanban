@@ -11,16 +11,19 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements Manager {
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private int counterId;
+    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected int counterId;
 
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+    protected HistoryManager getHistoryManager() {
+        return historyManager;
     }
 
     @Override
@@ -103,9 +106,7 @@ public class InMemoryTaskManager implements Manager {
         subtasks.values().forEach(subtask -> historyManager.remove(subtask.getId()));
         subtasks.clear();
 
-        epics.values().forEach(epic -> {
-            epic.removeIdSubtasks();
-        });
+        epics.values().forEach(epic -> epic.removeIdSubtasks());
 
         for (Integer idEpic : epics.keySet()) {
             checkStatusOfSubtask(idEpic);
@@ -197,10 +198,10 @@ public class InMemoryTaskManager implements Manager {
         for (Subtask value : subtasks.values()) {
             if (value.getIdEpic() == idEpic) {
                 countSubtasksOfEpic++; // считаем количество сабтасков у определенного эпика
-                if (value.getStatus().equals("DONE")) {
+                if (value.getStatus() == TaskStatus.DONE) {
                     countDone++;
                     break;
-                } else if (value.getStatus().equals("NEW")) {
+                } else if (value.getStatus() == TaskStatus.NEW) {
                     countNew++;
                 }
             }

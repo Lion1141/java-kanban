@@ -1,15 +1,16 @@
 package model;
+import static model.TaskType.TASK;
 
 public class Task {
     protected String name;
     protected int id;
     protected String description;
     protected TaskStatus status;
+    protected TaskType taskType = TASK;
 
     public Task(String name, String description) { //конструктор для создания объекта с новым id
         this.name = name;
         this.description = description;
-        this.status = status;
     }
 
     public Task(String name, String description, int id) { //конструктор для обновления объекта без обновления статуса
@@ -65,5 +66,13 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
     }
 }
