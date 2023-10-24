@@ -180,13 +180,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return history;
     }
 
-
-
-    @Override
-    public List<Task> getHistory() {
-        return super.getHistory();
-    }
-
     @Override
     public Integer createTask(Task task) {
         super.createTask(task);
@@ -218,21 +211,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public void removeIdSubtaskFromEpics(int idSubtask, int idEpic) {
         super.removeIdSubtaskFromEpics(idSubtask, idEpic);
         save();
-    }
-
-    @Override
-    public Collection<Task> getTasks() {
-        return super.getTasks();
-    }
-
-    @Override
-    public Collection<Epic> getEpics() {
-        return super.getEpics();
-    }
-
-    @Override
-    public Collection<Subtask> getSubtasks() {
-        return super.getSubtasks();
     }
 
     @Override
