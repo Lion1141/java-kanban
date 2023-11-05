@@ -6,6 +6,8 @@ import model.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static model.TaskType.EPIC;
@@ -18,7 +20,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public FileBackedTasksManager(String fileName) {
         this.fileName = fileName;
     }
-    private void save() {
+    public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(PATH_TO_SAVE + fileName))) {
             for (Task task : tasks.values()) {
                 writeTaskToFile(writer, task);
@@ -48,11 +50,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     private String taskToString(Task task) {
-        String row = String.format("%s,%s,%s,%s,%s", task.getId(),
+        String row = String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(),
                 task.getTaskType(),
                 task.getName(),
                 task.getDescription(),
-                task.getStatus());
+                task.getStatus(),
+                task.getStartTime(),
+                task.getDuration(),
+                task.getEndTime());
 
         if (task.getTaskType() == SUBTASK) {
             long epicId = ((Subtask) task).getIdEpic();
@@ -89,11 +94,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             final Subtask subtask = entry.getValue();
             final Epic epic = tasksManager.epics.get(subtask.getIdEpic());
 
-            var idSubtasks = epic.getIdSubtask();
+            var idSubtasks = epic.getSubtaskslist();
             if(idSubtasks.contains(subtask.getId())) {
                 return;
             }
-            idSubtasks.add(subtask.getId());
+            idSubtasks.add(subtask);
         }
     }
 
@@ -149,16 +154,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         final String taskDescription = taskValues[3];
         final TaskStatus taskStatus = TaskStatus.valueOf(taskValues[4]);
 
-
         if (taskType == EPIC) {
             return new Epic(taskName, taskDescription, taskId);
-        } else if (taskType == SUBTASK) {
-            final int epicId = Integer.parseInt(taskValues[5]);
-            return new Subtask(taskName, taskDescription, taskId, taskStatus, epicId);
         } else {
-            return new Task(taskName, taskDescription, taskId, taskStatus);
+            final LocalDateTime taskStartTime = LocalDateTime.parse(taskValues[5]);
+            final Duration taskDuration = Duration.parse(taskValues[6]);
+            if (taskType == SUBTASK) {
+                final int epicId = Integer.parseInt(taskValues[5]);
+                return new Subtask(taskName, taskDescription, taskId, taskStatus, taskStartTime, taskDuration, epicId);
+            } else {
+                return new Task(taskName, taskDescription, taskId, taskStatus, taskStartTime, taskDuration);
+            }
         }
     }
+
 
     private static String historyToString(HistoryManager manager) {
         StringBuilder builder = new StringBuilder();
@@ -174,11 +183,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String[] elements = value.split(",");
 
         for (String element : elements) {
-            history.add(Integer.parseInt(element));
+            if(!element.isBlank()){
+                history.add(Integer.parseInt(element));
+            }
         }
 
         return history;
     }
+
 
     @Override
     public Integer createTask(Task task) {
@@ -202,8 +214,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addIdSubtaskToEpics(int idSubtask, int idEpic) {
-        super.addIdSubtaskToEpics(idSubtask, idEpic);
+    public void addSubtaskToEpics(Subtask subtask, int idEpic) {
+        super.addSubtaskToEpics(subtask, idEpic);
         save();
     }
 
@@ -271,25 +283,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteTaskByID(int id) {
+    public void deleteTaskByID(Integer id) {
         super.deleteTaskByID(id);
         save();
     }
 
     @Override
-    public void deleteEpicByID(int id) {
+    public void deleteEpicByID(Integer id) {
         super.deleteEpicByID(id);
         save();
     }
 
     @Override
-    public void deleteSubtaskByID(int id) {
+    public void deleteSubtaskByID(Integer id) {
         super.deleteSubtaskByID(id);
         save();
     }
 
     @Override
-    public void checkStatusOfSubtask(int idEpic) {
+    public void checkStatusOfSubtask(Integer idEpic) {
         super.checkStatusOfSubtask(idEpic);
         save();
     }

@@ -1,4 +1,7 @@
 package model;
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static model.TaskType.SUBTASK;
 
 
@@ -11,11 +14,32 @@ public class Subtask extends Task {
         this.idEpic = idEpic;
     }
 
+    public Subtask(String name, String description, int id, int idEpic) {
+        super(name, description, id);
+        this.idEpic = idEpic;
+    }
+
     public Subtask(String name, String description, int id, TaskStatus status, int idEpic) {
         super(name, description, id, status);
         this.idEpic = idEpic;
         super.setTaskType(SUBTASK);
     }
+
+    public Subtask(String name, int id, String description, TaskStatus status, TaskType taskType, LocalDateTime startTime, Duration duration, int idEpic) {
+        super(name, id, description, status, taskType, startTime, duration);
+        this.idEpic = idEpic;
+    }
+
+    public Subtask(String name, String description, LocalDateTime startTime, Duration duration, int idEpic) {
+        super(name, description, startTime, duration);
+        this.idEpic = idEpic;
+    }
+
+    public Subtask(String name, String description, int id, TaskStatus taskStatus, LocalDateTime taskStartTime, Duration taskDuration, int idEpic) {
+        super(name, description, id, taskStatus, taskStartTime, taskDuration);
+        this.idEpic = idEpic;
+    }
+
 
     public int getIdEpic() {
         return idEpic;

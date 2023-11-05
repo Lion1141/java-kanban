@@ -19,7 +19,7 @@ public interface Manager {
 
     Integer createSubtask(Subtask subtask);
 
-    void addIdSubtaskToEpics(int idSubtask, int idEpic);
+    void addSubtaskToEpics(Subtask subtask, int idEpic);
 
     void removeIdSubtaskFromEpics(int idSubtask, int idEpic);
 
@@ -44,11 +44,13 @@ public interface Manager {
     void updateSubtask(Subtask subtask);
     void updateEpic(Epic epic);
 
-    void deleteTaskByID(int id);
+    void deleteTaskByID(Integer id);
 
-    void deleteEpicByID(int id);
+    void deleteEpicByID(Integer id);
 
-    void deleteSubtaskByID(int id);
+    void deleteSubtaskByID(Integer id);
 
-    void checkStatusOfSubtask(int idEpic);
+    void checkStatusOfSubtask(Integer idEpic);
+
+    List<Task> getPrioritizedTasks();
 }
