@@ -1,5 +1,3 @@
-package ManagerTest;
-
 import controllers.InMemoryTaskManager;
 import controllers.Manager;
 import org.junit.jupiter.api.BeforeEach;

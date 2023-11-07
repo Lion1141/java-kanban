@@ -1,5 +1,3 @@
-package ManagerTest;
-
 import controllers.Manager;
 import model.Epic;
 import model.Subtask;
@@ -11,14 +9,14 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class TaskManagerTest<T extends Manager>{
-    Manager taskManager;    //Получение менеджера задач
-    Task task1;
+public abstract class TaskManagerTest<T extends Manager>{
+    protected Manager taskManager;    //Получение менеджера задач
+    protected Task task1;
     Task task2;
-    Epic epic1;
+    protected Epic epic1;
     Epic epic2;
-    Subtask subtask1;
-    Subtask subtask2;
+    protected Subtask subtask1;
+    protected Subtask subtask2;
 
     //Проверка функции получения списка всех Эпиков.
     @Test

@@ -1,10 +1,9 @@
-package ManagerTest;
-
 import controllers.FileBackedTasksManager;
+import exceptions.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
-import model.TaskStatus;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,8 +11,7 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     FileBackedTasksManager taskManager1;
@@ -28,7 +26,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     void save() {
         //a. Пустой список задач.
         assertDoesNotThrow(()->((FileBackedTasksManager)taskManager).save(),
-                "Сохранение менеджера с пустогым списком задач не должно вызывать исключений!");
+                "Сохранение менеджера с пустым списком задач не должно вызывать исключений!");
 
         //b. Эпик без подзадач.
         epic1 = new Epic("Переезд", "Телефон перевозчика: +123 456 78 90");
@@ -42,6 +40,12 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         assertEquals(0, taskManager1.getHistory().size(),
                 "Количество задач в истории обращения после восстановления не совпало!");
 
+        FileBackedTasksManager taskManager2 = new FileBackedTasksManager("example/example.csv");
+
+        // Подготавливаем ситуацию, в которой возникнет ошибка при сохранении файла
+        assertThrows(ManagerSaveException.class, () -> {
+            taskManager2.save();
+           }, "Другой путь для сохранения должен вызывать исключение!");
     }
 
     //Тестирование метода загрузки списка задач из файла
