@@ -7,6 +7,7 @@ import model.TaskStatus;
 import util.Managers;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements Manager {
     protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
@@ -199,7 +200,10 @@ public class InMemoryTaskManager implements Manager {
         final Epic epic = epics.remove(id); //удаляем эпик из общего списка
         if (epic != null) {
             historyManager.remove(id);
-            for (Subtask subtask : epic.getSubtaskslist()) { //удаляем все подзадачи этого эпика из общего списка в цикле
+            var subtasks = epic.getSubtaskslist();
+            if(subtasks == null || subtasks.isEmpty())
+                return;
+            for (Subtask subtask : subtasks) { //удаляем все подзадачи этого эпика из общего списка в цикле
                 historyManager.remove(subtask.getId());
                 subtasks.remove(subtask.getId());
             }
@@ -219,6 +223,12 @@ public class InMemoryTaskManager implements Manager {
         }
     }
 
+    @Override
+    public List<Subtask> getAllSubtasksByEpicId(long epicId) {
+        return subtasks.values().stream()
+                .filter(subtask -> subtask.getIdEpic() == epicId)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public void checkStatusOfSubtask(Integer idEpic) { // проверяем статусы всех сабтасков при обновлении каждого из них и меняем у эпика

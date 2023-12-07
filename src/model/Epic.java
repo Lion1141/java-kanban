@@ -3,6 +3,7 @@ package model;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
 import static model.TaskType.EPIC;
 
 public class Epic extends Task{
@@ -23,6 +24,9 @@ public class Epic extends Task{
 
     public Epic(String name, String description, int id, TaskStatus status, LocalDateTime startTime, Duration duration, LocalDateTime endTime) {
         super(name, description, id, status, startTime, duration);
+        if(subtaskslist == null){
+            subtaskslist = new ArrayList<>();
+        }
         this.endTime = endTime;
     }
 

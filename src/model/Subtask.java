@@ -14,9 +14,21 @@ public class Subtask extends Task {
         this.idEpic = idEpic;
     }
 
+    public Subtask(String name, String description, int idEpic, LocalDateTime startTime, Duration duration) {
+        super(name, description, startTime, duration);
+        super.setTaskType(SUBTASK);
+        this.idEpic = idEpic;
+    }
+
     public Subtask(String name, String description, int id, int idEpic) {
         super(name, description, id);
         this.idEpic = idEpic;
+    }
+
+    public Subtask(String name, String description, TaskStatus status, int idEpic) {
+        super(name, description);
+        this.idEpic = idEpic;
+        super.setTaskType(SUBTASK);
     }
 
     public Subtask(String name, String description, int id, TaskStatus status, int idEpic) {
@@ -35,8 +47,8 @@ public class Subtask extends Task {
         this.idEpic = idEpic;
     }
 
-    public Subtask(String name, String description, int id, TaskStatus taskStatus, LocalDateTime taskStartTime, Duration taskDuration, int idEpic) {
-        super(name, description, id, taskStatus, taskStartTime, taskDuration);
+    public Subtask(String name, String description, TaskStatus taskStatus, int id, LocalDateTime taskStartTime, Duration taskDuration, int idEpic) {
+        super(name, description, id, taskStatus,  taskStartTime, taskDuration);
         this.idEpic = idEpic;
     }
 

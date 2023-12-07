@@ -50,6 +50,8 @@ public interface Manager {
 
     void deleteSubtaskByID(Integer id);
 
+    List<Subtask> getAllSubtasksByEpicId(long epicId);
+
     void checkStatusOfSubtask(Integer idEpic);
 
     List<Task> getPrioritizedTasks();

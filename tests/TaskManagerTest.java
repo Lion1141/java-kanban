@@ -4,6 +4,7 @@ import model.Subtask;
 import model.Task;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -104,7 +105,7 @@ public abstract class TaskManagerTest<T extends Manager>{
                 "Возвращённая задача не соответствует добавленой!");
     }
     @Test
-    void createTask() {    //createTask(Task task1);
+    void createTask() throws IOException, InterruptedException {    //createTask(Task task1);
         //a. Со стандартным поведением.
         task1 = new Task("Задача", "Задача для добавления");
         taskManager.createTask(task1);
@@ -113,7 +114,7 @@ public abstract class TaskManagerTest<T extends Manager>{
     }
 
     @Test
-    void createEpic() {    //createEpic(Epic epic1);
+    void createEpic() throws IOException, InterruptedException {    //createEpic(Epic epic1);
         //a. Со стандартным поведением.
         epic1 = new Epic("Эпик", "Эпик для добавления");
         taskManager.createEpic(epic1);
@@ -191,7 +192,7 @@ public abstract class TaskManagerTest<T extends Manager>{
     @Test
     void deleteTasks(){
         //b. С пустым списком задач.
-        assertDoesNotThrow(()->taskManager.deleteTaskByID(1),
+        assertDoesNotThrow(()->taskManager.deleteTaskByID(0),
                 "Попытка удаления несуществующей задачи не должна вызывать исключение!");
 
         //a. Со стандартным поведением.

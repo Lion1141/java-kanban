@@ -1,13 +1,78 @@
+import api.HttpTaskServer;
+import api.KVServer;
 import controllers.Manager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import util.Managers;
 
-import java.util.List;
+import java.io.IOException;
+
+import static api.HttpTaskManager.loadFromServer;
+import static model.TaskStatus.DONE;
 
 public class Main {
         public static void main(String[] args) {
+                try {
+                        System.out.println("Стартуем KVServer");
+                        new KVServer().start();
+
+                        System.out.println("Стартуем HTTPTaskServer");
+                        new HttpTaskServer().start();
+
+
+                } catch (IOException e) {
+                        System.out.println("Возникли проблемы в работе: " + e.getMessage());
+                }
+
+                Manager taskManager = Managers.getDefault("http://localhost", 8087);
+                /*TaskManager taskManager = Managers.getDefault();*/
+
+                taskManager.createTask(new Task("Task1", "TaskDesc1")); /*0*/
+                taskManager.createTask(new Task("Task2", "TaskDesc2")); /*1*/
+
+                taskManager.createEpic(new Epic("Epic1", "Epic1 desc")); /*2*/
+                taskManager.createSubtask(new Subtask("Subtask1 Epic1", "Subtask1 Epic1 desc", 2)); /*3*/
+
+                taskManager.createEpic(new Epic("Epic2", "Epic2 desc")); /*4*/
+                taskManager.createSubtask(new Subtask("Subtask1 Epic2", "Subtask1 Epic2 desc", 4)); /*5*/
+                taskManager.createSubtask(new Subtask("Subtask2 Epic2", "Subtask2 Epic2 desc", 4)); /*6*/
+
+                System.out.println("=====CREATED=====");
+                System.out.println("TASKS\n" + taskManager.getTasks());
+                System.out.println("EPICS\n" + taskManager.getEpics());
+                System.out.println("SUBTASKS\n" + taskManager.getSubtasks());
+
+                taskManager.getTaskById(0);
+                taskManager.getTaskById(0);
+
+                taskManager.getEpicById(2);
+                taskManager.getEpicById(2);
+                taskManager.getEpicById(2);
+                taskManager.getEpicById(4);
+
+                taskManager.getSubtaskById(5);
+                taskManager.getSubtaskById(6);
+                taskManager.getSubtaskById(3);
+                taskManager.getSubtaskById(3);
+                taskManager.getSubtaskById(3);
+
+                taskManager.getTaskById(0);
+                taskManager.getTaskById(0);
+
+                Manager taskManager1 = loadFromServer("http://localhost", 8087);
+
+                System.out.println("=====HISTORY=====");
+                System.out.println(taskManager.getHistory());
+
+                taskManager.updateTask(new Task("Task1", "TaskDesc1", 1, DONE));
+                taskManager.updateSubtask(new Subtask("Subtask1 Epic2", "Subtask1 Epic2 desc plus some more text", 5,
+                        DONE, 4));
+                taskManager.updateSubtask(new Subtask("Subtask1 Epic2", "Subtask1 Epic2 desc", 5,
+                        DONE, 4));
+
+
+/*
                 Manager manager = Managers.getDefault();
 
                 Task task1 = new Task("Задача 1", "Описание задачи 1"); //создаём задачи
@@ -67,6 +132,7 @@ public class Main {
                 System.out.println("**************История задач**************");
                 List<Task> history = manager.getHistory();
                 System.out.println(history);
+*/
 
 
         }
